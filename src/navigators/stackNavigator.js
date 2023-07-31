@@ -3,6 +3,8 @@ import Splash from '../components/splash';
 import Index from '../components';
 import Home from '../components/home';
 import Mangas from '../components/mangas';
+import TabsNavigator from './tabsNavigator';
+import DrawerNavigator from './drawerNavigator';
 
 
 const Stack=createStackNavigator()
@@ -14,8 +16,8 @@ const StackNavigator = () => {
    }} >
     <Stack.Screen name="Splash" component={Splash} />
     <Stack.Screen name="Index" component={Index} />
-    <Stack.Screen name="Home" component={Home} />
-    <Stack.Screen name="Mangas" component={Mangas} />
+    <Stack.Screen name="Home" component={DrawerNavigator} />
+    <Stack.Screen name="Mangas" component={TabsNavigator} />
     </Stack.Navigator>
   );
 }

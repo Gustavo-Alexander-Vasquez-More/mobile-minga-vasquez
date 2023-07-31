@@ -7,7 +7,7 @@ export default function App() {
   return (
     <NavigationContainer> 
       <StatusBar />
-      <StackNavigator /> 
+      <StackNavigator/>  
       {/* <DrawerNavigator/> */}
   </NavigationContainer>
   );
