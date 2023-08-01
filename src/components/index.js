@@ -1,54 +1,73 @@
-import { StyleSheet, Text, View, TouchableHighlight, Image, KeyboardAvoidingView, ImageBackground} from 'react-native';
+import { StyleSheet, Text, View, TouchableHighlight, Image, KeyboardAvoidingView, ImageBackground, TextInput } from 'react-native';
 import { useState } from 'react';
-import { Input } from 'react-native-elements';
 import React from 'react';
 import logo from '../../assets/logo2.png';
 import kaneki from '../../assets/kaneki.png'
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 
 const index = (props) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [inputEmail, setInputEmail] = useState('');
+  const [inputPassword, setInputPassword] = useState('');
 
-  const handleLogin = () => {
-    // Aquí puedes realizar la lógica para manejar el inicio de sesión con el email y la contraseña ingresados
-    console.log('Email:', email);
-    console.log('Password:', password);
+  const signin = async () => {
+    let datos = {
+      email: inputEmail,
+      password: inputPassword,
+    }
+
+    try {
+      const { data } = await axios.post('https://minga-back-vasquez-production.up.railway.app/api/users/signin', datos);
+
+      console.log(data.response);
+
+      let token = JSON.stringify(data.response.token)
+      await AsyncStorage.setItem('token', token);
+      await AsyncStorage.setItem('user', JSON.stringify(data.response.user));
+      await AsyncStorage.setItem('photo', JSON.stringify(data.response.user.photo));
+      alert('Ingreso exitoso!');
+      props.navigation.navigate('Home');
+
+    } catch (error) {
+      console.log(error);
+      alert('Correo electrónico o contraseña incorrectos');
+      props.navigation.navigate('Index')
+    }
   };
-
-  return (
-      <ImageBackground style={styles.backgroundImage} source={kaneki}>
-          <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+ return (
+    <ImageBackground style={styles.backgroundImage} source={kaneki}>
+      <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <Image style={styles.logo} source={logo} />
-      <View style={styles.formContainer}>
-        <Text style={styles.welcome}>Welcome</Text>
-        <View style={styles.inputContainer}>
-          <Input
-            placeholder="Correo electrónico"
-            onChangeText={(text) => setEmail(text)}
-            value={email}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            inputContainerStyle={styles.input}
-          />
-          <Input
-            placeholder="Contraseña"
-            onChangeText={(text) => setPassword(text)}
-            value={password}
-            secureTextEntry
-            inputContainerStyle={styles.input}
-          />
+        <View style={styles.formContainer}>
+          <Text style={styles.welcome}>Welcome</Text>
+          <View style={styles.inputContainer}>
+            <TextInput
+              placeholder="Correo electrónico"
+              value={inputEmail}
+              onChangeText={setInputEmail}
+              keyboardType="email-address"
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="Contraseña"
+              value={inputPassword}
+              onChangeText={setInputPassword}
+              secureTextEntry
+              style={styles.input}
+            />
+          </View>
+          <TouchableHighlight style={styles.buttonRead} onPress={signin}>
+            <Text style={styles.textLogin}>Sign in!</Text>
+          </TouchableHighlight>
+          <View style={{ marginBottom: 10 }} />
+          <Text style={styles.textRegister}>you don't have an account?</Text>
+          <TouchableHighlight style={styles.buttonRead} onPress={() => props.navigation.navigate('Register')}>
+            <Text style={styles.textLogin}>Register</Text>
+          </TouchableHighlight>
         </View>
-        <TouchableHighlight style={styles.buttonRead} onPress={() => props.navigation.navigate('Home')}>
-          <Text style={styles.textLogin}>Sign in!</Text>
-        </TouchableHighlight>
-        <View style={{ marginBottom: 10 }} />
-        <Text style={styles.textRegister}>you don't have an account?</Text>
-        <TouchableHighlight style={styles.buttonRead} onPress={() => props.navigation.navigate('Home')}>
-          <Text style={styles.textLogin}>Register</Text>
-        </TouchableHighlight>
-      </View>
-    </KeyboardAvoidingView>
-      </ImageBackground>
+      </KeyboardAvoidingView>
+    </ImageBackground>
   );
 };
 
@@ -62,7 +81,7 @@ const styles = StyleSheet.create({
   },
   backgroundImage: {
     ...StyleSheet.absoluteFillObject,
-resizeMode:'contain'
+    resizeMode: 'contain',
   },
   formContainer: {
     width: '100%',
@@ -77,6 +96,8 @@ resizeMode:'contain'
     backgroundColor: 'white',
     borderRadius: 10,
     paddingHorizontal: 15,
+    marginBottom:30,
+    padding:10
   },
   buttonRead: {
     width: '70%',
