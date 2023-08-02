@@ -4,7 +4,7 @@ import axios from 'axios';
 import menu from '../../assets/Menu.png';
 import logo from '../../assets/logo2.png';
 import { useNavigation } from '@react-navigation/native';
-
+console.disableYellowBox = true; 
 import mangaDetail from './mangaDetail';
 
 const Mangas = (props) => {

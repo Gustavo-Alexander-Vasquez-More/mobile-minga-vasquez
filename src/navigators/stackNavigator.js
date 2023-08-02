@@ -7,7 +7,7 @@ import TabsNavigator from './tabsNavigator';
 import DrawerNavigator from './drawerNavigator';
 import Register from '../components/register';
 import mangaDetail from '../components/mangaDetail';
-
+console.disableYellowBox = true; 
 const Stack=createStackNavigator()
 
 const StackNavigator = () => {

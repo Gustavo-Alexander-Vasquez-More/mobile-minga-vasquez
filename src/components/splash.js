@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { StyleSheet, Text, View, Image} from 'react-native'
 import React from 'react'
 import logo from '../../assets/logo2.png'
+console.disableYellowBox = true; 
 const splash = (props) => {
     console.log(props.navigation);
     useEffect(() => {

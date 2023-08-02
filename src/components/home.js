@@ -4,6 +4,7 @@ import { SafeAreaView, StyleSheet, Text, View, Image, ImageBackground, Button, T
 import menu from '../../assets/Menu.png';
 import logo from '../../assets/logo2.png';
 import kaneki from '../../assets/kaneki.png'
+console.disableYellowBox = true; 
 const home = (props) => {
     return (
     <ImageBackground

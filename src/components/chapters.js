@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, TouchableHighlight, Image } from 'react-native'
 import React from 'react'
 import menu from '../../assets/Menu.png';
 import logo from '../../assets/logo.png';
-
+console.disableYellowBox = true; 
 const chapters = (props) => {
   return (
     

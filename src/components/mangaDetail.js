@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'; // Importa useState
 import axios from 'axios'; // Importa Axios
 import { useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+console.disableYellowBox = true; 
 const mangaDetail = () => {
   const route = useRoute();
   const mangaId = route.params.mangaId;

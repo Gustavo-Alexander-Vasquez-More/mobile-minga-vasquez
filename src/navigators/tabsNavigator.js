@@ -6,7 +6,7 @@ import mangaDetail from '../components/mangaDetail';
 import casa from '../../assets/casa.png';
 import libro from '../../assets/libro.png';
 import React from 'react';
-
+console.disableYellowBox = true; 
 const Tab = createBottomTabNavigator();
 
 const TabsNavigator = () => {
