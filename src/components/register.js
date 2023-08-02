@@ -1,16 +1,77 @@
-import { StyleSheet, Text, View, ImageBackground, KeyboardAvoidingView, Image, TouchableHighlight} from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import { StyleSheet, Text, View, ImageBackground, KeyboardAvoidingView, Image, TouchableOpacity, Alert } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 import Register from '../../assets/narutoBack.png';
 import logo from '../../assets/logo2.png';
 import { Input } from 'react-native-elements';
+import axios from 'axios'; // Importa Axios
 
-const register = (props) => {
+const SignUp = (props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [photo, setPhoto] = useState('');
- 
+  const [photo, setPhoto] = useState(null);
 
-return (
+  const emailRef = useRef();
+  const passwordRef = useRef();
+
+  const handleFormSubmit = async () => {
+    try {
+      let formData = new FormData();
+      formData.append('email', email);
+      formData.append('password', password);
+      formData.append('photo', {
+        uri: photo,
+        name: 'photo.jpg',
+        type: 'image/jpeg',
+      });
+
+      const response = await axios.post("https://minga-back-vasquez-production.up.railway.app/api/users/register", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      Alert.alert(
+        'Successful Registration',
+        'Your registration was successful!',
+        );
+        props.navigation.navigate('Index')
+    } catch (error) {
+      console.error(error);
+      // Resto de la lógica de manejo de errores
+    }
+  };
+
+  const pickImage = async () => {
+    Alert.alert(
+      'Choose Image Source',
+      'Where do you want to upload your image from?',
+      [
+        { text: 'Camera', onPress: () => handleImagePicker(true) },
+        { text: 'Gallery', onPress: () => handleImagePicker(false) },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  const handleImagePicker = async (fromCamera) => {
+    let result;
+
+    if (fromCamera) {
+      result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      });
+    } else {
+      result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      });
+    }
+
+    if (!result.cancelled) {
+      setPhoto(result.uri);
+    }
+  };
+
+  return (
     <ImageBackground style={styles.backgroundImage} source={Register}>
       <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <Image style={styles.logo} source={logo} />
@@ -33,16 +94,18 @@ return (
               inputContainerStyle={styles.input}
             />
           </View>
-          <TouchableHighlight style={styles.buttonRead} onPress={() => props.navigation.navigate('Index')}>
-            <Text style={styles.textLogin}>Sign up!</Text>
-          </TouchableHighlight>
+          <TouchableOpacity style={styles.buttonContainer} onPress={pickImage}>
+            <Text style={styles.buttonText}>Select Image</Text>
+          </TouchableOpacity>
+          {photo && <Image source={{ uri: photo }} style={styles.selectedPhoto} />}
+          <TouchableOpacity style={styles.buttonContainer} onPress={handleFormSubmit}>
+            <Text style={styles.buttonText}>Sign Up</Text>
+          </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
     </ImageBackground>
   );
 };
-
-export default register;
 
 const styles = StyleSheet.create({
   container: {
@@ -57,7 +120,7 @@ const styles = StyleSheet.create({
   formContainer: {
     width: '100%',
     paddingHorizontal: 25,
-    alignItems: 'center',  // Centrar elementos horizontalmente
+    alignItems: 'center',
   },
   inputContainer: {
     width: '100%',
@@ -68,16 +131,23 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 15,
   },
-  buttonRead: {
+  buttonContainer: {
     width: '70%',
     padding: 10,
     backgroundColor: 'green',
     borderRadius: 10,
     alignItems: 'center',
+    marginTop: 10,
   },
-  textLogin: {
+  buttonText: {
     fontSize: 17,
     color: 'white',
+  },
+  selectedPhoto: {
+    width: 200,
+    height: 200,
+    resizeMode: 'contain',
+    marginTop: 20,
   },
   welcome: {
     color: 'white',
@@ -89,14 +159,6 @@ const styles = StyleSheet.create({
     height: 80,
     marginBottom: 20,
   },
-  textRegister: {
-    color: 'white',
-    fontSize: 15,
-    marginBottom: 10,
-  },
-  photoInput:{
-    width:'100%',
-    height:50,
-    backgroundColor:'pink'
-  }
 });
+
+export default SignUp;

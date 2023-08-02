@@ -5,7 +5,10 @@ import { View, Text, Image, TouchableHighlight, StyleSheet } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Home from '../components/home';
 import TabsNavigator from './tabsNavigator';
+import StackNavigator from './stackNavigator';
+import mangaDetail from '../components/mangaDetail';
 import one from '../../assets/one.png'
+import mangas from '../components/mangas';
 
 const Drawer = createDrawerNavigator();
 
@@ -38,6 +41,14 @@ const CustomDrawerContent = (props) => {
       console.log(error);
     }
   };
+  function verfiedUrl(photo){
+    if(photo.startsWith('http')){ //si foto empieza con http entonces devuelve la foto 
+      return photo
+    }else{
+    return `https://minga-back-vasquez-production.up.railway.app/${photo}`
+    }
+    
+  }
 
   return (
     <DrawerContentScrollView {...props}>
@@ -45,7 +56,7 @@ const CustomDrawerContent = (props) => {
         <Image style={styles.imgDrawer} source={one} />
         </View>
       <View style={styles.userContainer}>
-        {user?.photo && <Image style={styles.userPhoto} source={{ uri: user.photo }} />}
+        {user?.photo && <Image style={styles.userPhoto} source={{ uri: verfiedUrl(user.photo) }} />}
         {user?.email && <Text style={styles.userEmail}>{user.email}</Text>}
       </View>
       <DrawerItemList {...props} />
@@ -61,9 +72,11 @@ const DrawerNavigator = () => {
         headerShown: false,
       }}
       drawerContent={(props) => <CustomDrawerContent {...props} />}
+      unmountOnBlur={true}
     >
-      <Drawer.Screen name="Home" component={Home} />
-      <Drawer.Screen name="Mangas" component={TabsNavigator} />
+      <Drawer.Screen name="Home" component={TabsNavigator} />
+      <Drawer.Screen name="Mangas" component={mangas} />
+      
     </Drawer.Navigator>
   );
 };

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { SafeAreaView, StyleSheet, Text, View, Image, ImageBackground, Button, TouchableHighlight} from 'react-native';
 import menu from '../../assets/Menu.png';
-import logo from '../../assets/logo.png';
+import logo from '../../assets/logo2.png';
 import kaneki from '../../assets/kaneki.png'
 const home = (props) => {
     return (
