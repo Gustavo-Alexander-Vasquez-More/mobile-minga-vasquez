@@ -9,7 +9,7 @@ import StackNavigator from './stackNavigator';
 import mangaDetail from '../components/mangaDetail';
 import one from '../../assets/one.png'
 import mangas from '../components/mangas';
-
+console.disableYellowBox = true; 
 const Drawer = createDrawerNavigator();
 
 const CustomDrawerContent = (props) => {

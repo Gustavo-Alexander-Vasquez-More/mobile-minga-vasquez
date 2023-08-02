@@ -1,15 +1,15 @@
-import { StyleSheet, Text, View, TouchableHighlight, Image, KeyboardAvoidingView, ImageBackground, TextInput } from 'react-native';
-import { useState } from 'react';
-import React from 'react';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, TouchableHighlight, Image, KeyboardAvoidingView, ImageBackground, TextInput, Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import logo from '../../assets/logo2.png';
 import kaneki from '../../assets/kaneki.png'
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from '@react-navigation/native';
-
-const index = (props) => {
+console.disableYellowBox = true; 
+const Index = () => {
   const [inputEmail, setInputEmail] = useState('');
   const [inputPassword, setInputPassword] = useState('');
+  const navigation = useNavigation();
 
   const signin = async () => {
     let datos = {
@@ -26,16 +26,36 @@ const index = (props) => {
       await AsyncStorage.setItem('token', token);
       await AsyncStorage.setItem('user', JSON.stringify(data.response.user));
       await AsyncStorage.setItem('photo', JSON.stringify(data.response.user.photo));
-      alert('Ingreso exitoso!');
-      props.navigation.navigate('Home');
+
+      // Alerta para login exitoso
+      showAlert("It's good to see you again! 😋", 'success');
+      
+      navigation.navigate('Home');
 
     } catch (error) {
       console.log(error);
-      alert('Correo electrónico o contraseña incorrectos');
-      props.navigation.navigate('Index')
+      
+      // Alerta para login no exitoso
+      showAlert('wrong email or password! 😓', 'error');
+      navigation.navigate('Index');
     }
   };
- return (
+
+  const showAlert = (message, type) => {
+    const alertBackgroundColor = type === 'success' ? 'green' : 'red';
+    const textColor = 'white';
+
+    Alert.alert(
+      '',
+      message,
+      [
+        { text: 'OK', style: 'cancel' },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  return (
     <ImageBackground style={styles.backgroundImage} source={kaneki}>
       <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <Image style={styles.logo} source={logo} />
@@ -43,14 +63,14 @@ const index = (props) => {
           <Text style={styles.welcome}>Welcome</Text>
           <View style={styles.inputContainer}>
             <TextInput
-              placeholder="Correo electrónico"
+              placeholder="📧 Your email"
               value={inputEmail}
               onChangeText={setInputEmail}
               keyboardType="email-address"
               style={styles.input}
             />
             <TextInput
-              placeholder="Contraseña"
+              placeholder="🔒 Your password"
               value={inputPassword}
               onChangeText={setInputPassword}
               secureTextEntry
@@ -62,7 +82,7 @@ const index = (props) => {
           </TouchableHighlight>
           <View style={{ marginBottom: 10 }} />
           <Text style={styles.textRegister}>you don't have an account?</Text>
-          <TouchableHighlight style={styles.buttonRead} onPress={() => props.navigation.navigate('Register')}>
+          <TouchableHighlight style={styles.buttonRead} onPress={() => navigation.navigate('Register')}>
             <Text style={styles.textLogin}>Register</Text>
           </TouchableHighlight>
         </View>
@@ -70,8 +90,6 @@ const index = (props) => {
     </ImageBackground>
   );
 };
-
-export default index;
 
 const styles = StyleSheet.create({
   container: {
@@ -86,7 +104,7 @@ const styles = StyleSheet.create({
   formContainer: {
     width: '100%',
     paddingHorizontal: 25,
-    alignItems: 'center',  // Centrar elementos horizontalmente
+    alignItems: 'center',
   },
   inputContainer: {
     width: '100%',
@@ -126,3 +144,5 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 });
+
+export default Index;

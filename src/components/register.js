@@ -5,7 +5,7 @@ import Register from '../../assets/narutoBack.png';
 import logo from '../../assets/logo2.png';
 import { Input } from 'react-native-elements';
 import axios from 'axios'; // Importa Axios
-
+console.disableYellowBox = true; 
 const SignUp = (props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -32,7 +32,7 @@ const SignUp = (props) => {
       });
       Alert.alert(
         'Successful Registration',
-        'Your registration was successful!',
+        'Your registration was successful! ✔️',
         );
         props.navigation.navigate('Index')
     } catch (error) {
@@ -44,7 +44,7 @@ const SignUp = (props) => {
   const pickImage = async () => {
     Alert.alert(
       'Choose Image Source',
-      'Where do you want to upload your image from?',
+      'Where do you want to upload your image from? 📷 ',
       [
         { text: 'Camera', onPress: () => handleImagePicker(true) },
         { text: 'Gallery', onPress: () => handleImagePicker(false) },
@@ -76,10 +76,10 @@ const SignUp = (props) => {
       <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <Image style={styles.logo} source={logo} />
         <View style={styles.formContainer}>
-          <Text style={styles.welcome}>Welcome</Text>
+          <Text style={styles.welcome}>Welcome back 💫</Text>
           <View style={styles.inputContainer}>
             <Input
-              placeholder="Correo electrónico"
+              placeholder="📧 Your email"
               onChangeText={(text) => setEmail(text)}
               value={email}
               keyboardType="email-address"
@@ -87,7 +87,7 @@ const SignUp = (props) => {
               inputContainerStyle={styles.input}
             />
             <Input
-              placeholder="Contraseña"
+              placeholder="🔒 Your password"
               onChangeText={(text) => setPassword(text)}
               value={password}
               secureTextEntry
